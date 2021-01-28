@@ -1,7 +1,7 @@
 'use strict';
-const mapObj = require('map-obj');
-const camelCase = require('camelcase');
-const QuickLru = require('quick-lru');
+import mapObj from 'map-obj';
+import camelCase from 'camelcase';
+import QuickLru from 'quick-lru';
 
 const has = (array, key) => array.some(x => {
 	if (typeof x === 'string') {
@@ -12,7 +12,7 @@ const has = (array, key) => array.some(x => {
 	return x.test(key);
 });
 
-const cache = new QuickLru({maxSize: 100000});
+const cache = new QuickLru({ maxSize: 100000 });
 
 // Reproduces behavior from `map-obj`
 const isObject = value =>
@@ -33,7 +33,7 @@ const camelCaseConvert = (input, options) => {
 		...options
 	};
 
-	const {exclude, pascalCase, stopPaths, deep} = options;
+	const { exclude, pascalCase, stopPaths, deep } = options;
 
 	const stopPathsSet = new Set(stopPaths);
 
@@ -52,7 +52,7 @@ const camelCaseConvert = (input, options) => {
 			if (cache.has(cacheKey)) {
 				key = cache.get(cacheKey);
 			} else {
-				const returnValue = camelCase(key, {pascalCase});
+				const returnValue = camelCase(key, { pascalCase });
 
 				if (key.length < 100) { // Prevent abuse
 					cache.set(cacheKey, returnValue);
@@ -68,7 +68,7 @@ const camelCaseConvert = (input, options) => {
 	return mapObj(input, makeMapper(undefined));
 };
 
-module.exports = (input, options) => {
+export default (input, options) => {
 	if (Array.isArray(input)) {
 		return Object.keys(input).map(key => camelCaseConvert(input[key], options));
 	}
